@@ -127,6 +127,17 @@ export function AnalysisPanel() {
     extractFrames(file);
   };
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith("video/")) return;
+    setVideoFile(file);
+    setResult("");
+    setFrames([]);
+    setFrameBlobs([]);
+    extractFrames(file);
+  };
+
   const clearVideo = () => {
     setVideoFile(null);
     setVideoUrl(null);
