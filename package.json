@@ -12,7 +12,8 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:format": "prisma format",
-    "db:seed": "node prisma/seed.js"
+    "db:seed": "node prisma/seed.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.24",
