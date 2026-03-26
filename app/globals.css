@@ -207,3 +207,82 @@
   animation: blob 20s infinite ease-in-out alternate;
   will-change: transform;
 }
+/* ── Premium Glassmorphism ── */
+.glass-panel {
+  @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300;
+}
+
+/* ── Bento Grid Utilities ── */
+.bento-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bento-item-large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+/* ── Film Strip Effect ── */
+.film-strip {
+  position: relative;
+  padding: 10px 0;
+  background: #111;
+  border-top: 4px dashed #333;
+  border-bottom: 4px dashed #333;
+}
+
+.film-frame {
+  @apply relative overflow-hidden rounded-sm border-x-2 border-black/40;
+}
+
+/* ── Scanning Animation ── */
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+.animate-scan {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--primary), transparent);
+  box-shadow: 0 0 15px var(--primary);
+  animation: scan 2s linear infinite;
+}
+
+/* ── Progress Glow ── */
+.progress-glow {
+  filter: drop-shadow(0 0 8px hsl(217 91% 60% / 0.4));
+}
+
+/* ── Scrollbar Utilities ── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

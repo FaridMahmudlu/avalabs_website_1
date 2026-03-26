@@ -268,281 +268,209 @@ export function AnalysisPanel() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col overflow-hidden glass-panel rounded-3xl border-white/5 mx-2 my-2 shadow-2xl">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-border px-5 py-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
-          <BarChart3 className="h-5 w-5 text-green-400" />
-        </div>
-        <div>
-          <h2 className="text-base font-semibold text-foreground">
-            2. Video Analizi
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Videonuzu yukleyin, AI puanlama ve rapor olusturur
-          </p>
-        </div>
-      </div>
-
-      {/* Topic input */}
-      <div className="border-b border-border px-5 py-3">
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          placeholder="Video konusu (opsiyonel)"
-          className="w-full rounded-lg border border-border bg-secondary/50 px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-      </div>
-
-      {/* Upload area */}
-      <div className="border-b border-border px-5 py-4">
-        {!videoFile ? (
-          <div
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border py-8 transition-colors hover:border-primary/50 hover:bg-secondary/20"
-            onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(e) =>
-              e.key === "Enter" && fileInputRef.current?.click()
-            }
-            role="button"
-            tabIndex={0}
-          >
-            <Upload className="h-8 w-8 text-muted-foreground/50" />
-            <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">
-                Video dosyasini surukleyin veya secin
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground/60">
-                MP4, MOV, AVI - Maks 100MB
-              </p>
-            </div>
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 bg-white/5 backdrop-blur-md">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20 glow-blue animate-pulse-glow">
+            <BarChart3 className="h-6 w-6 text-primary" />
           </div>
-        ) : (
-          <div className="flex items-center gap-3 rounded-lg bg-secondary/30 p-3">
-            <Film className="h-5 w-5 shrink-0 text-primary" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-foreground">
-                {videoFile.name}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {(videoFile.size / (1024 * 1024)).toFixed(1)} MB
-                {frames.length > 0 &&
-                  ` | ${frames.length} kare (her ${SANIYE_ARALIGI}sn)`}
-                {extracting && " | Kareler aliniyor..."}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={clearVideo}
-              className="shrink-0 text-muted-foreground hover:text-foreground"
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-foreground">
+              Video Analiz Studio
+            </h2>
+            <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-widest">
+              AI Powered Insights
+            </p>
+          </div>
+        </div>
+        {videoFile && (
+           <Button variant="ghost" size="sm" onClick={clearVideo} className="text-muted-foreground hover:text-destructive transition-colors">
+             <X className="h-4 w-4 mr-2" /> Temizle
+           </Button>
+        )}
+      </div>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        {/* Topic & Upload Section */}
+        <div className="px-6 py-6 space-y-6">
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-right from-primary to-purple-500 rounded-2xl blur opacity-10 group-focus-within:opacity-25 transition duration-500"></div>
+            <input
+              type="text"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Video konusu veya odak noktası..."
+              className="relative w-full rounded-xl border border-white/10 bg-black/20 backdrop-blur-sm px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            />
+          </div>
+
+          {!videoFile ? (
+            <div
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+              className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-white/10 py-16 transition-all hover:border-primary/40 hover:bg-primary/5"
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
+              role="button"
+              tabIndex={0}
             >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="video/*"
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-
-        {/* Frame thumbnails */}
-        {frames.length > 0 && (
-          <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1">
-            {frames.map((frame, i) => (
-              <img
-                key={`frame-${i}-${frame.slice(-10)}`}
-                src={frame || "/placeholder.svg"}
-                alt={`Kare ${i + 1}`}
-                className="h-12 w-16 shrink-0 rounded border border-border object-cover"
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Analyze button */}
-        {frames.length > 0 && (
-          <Button
-            onClick={handleAnalyze}
-            disabled={isLoading || extracting}
-            className="mt-3 w-full gap-2"
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <BarChart3 className="h-4 w-4" />
-            )}
-            {isLoading ? "Analiz Ediliyor..." : "Analiz Et"}
-          </Button>
-        )}
-      </div>
-
-      {/* Results */}
-      <div className="flex-1 overflow-y-auto px-5 py-4">
-        {!result && !isLoading && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/50">
-              <BarChart3 className="h-8 w-8 text-muted-foreground/50" />
-            </div>
-            <p className="text-sm font-medium text-muted-foreground">
-              Videonuzu yukleyin
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground/70">
-              AI her {SANIYE_ARALIGI} saniyeden bir kare alip analiz edecek
-            </p>
-          </div>
-        )}
-
-        {(result || isLoading) && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">Analiz Raporu</Badge>
-                {frames.length ? (
-                  <span className="truncate text-xs text-muted-foreground">
-                    {frames.length} kare • her {SANIYE_ARALIGI}sn
-                  </span>
-                ) : null}
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary/50 group-hover:scale-110 transition-transform duration-300">
+                <Upload className="h-8 w-8 text-primary/70" />
               </div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={copyAll}
-                disabled={!result}
-                className="gap-2"
-              >
-                <Copy className="h-4 w-4" />
-                {copied ? "Kopyalandı" : "Kopyala"}
-              </Button>
+              <div className="text-center">
+                <p className="text-base font-semibold text-foreground">
+                  Video yükle veya sürükle
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground/60">
+                  MP4, MOV, AVI (Maks. 100MB)
+                </p>
+              </div>
             </div>
+          ) : (
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-1">
+              {/* Film Strip Effect */}
+              {frames.length > 0 && (
+                <div className="film-strip flex gap-2 overflow-x-auto px-4 no-scrollbar">
+                  {frames.map((frame, i) => (
+                    <div key={`frame-${i}`} className="film-frame h-24 w-40 shrink-0">
+                      <img
+                        src={frame || "/placeholder.svg"}
+                        alt={`Kare ${i + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                      {isLoading && <div className="animate-scan" style={{ animationDelay: `${i * 100}ms` }} />}
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <div className="flex items-center justify-between p-4 bg-white/5 backdrop-blur-sm">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Film className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {videoFile.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground/70">
+                      {(videoFile.size / (1024 * 1024)).toFixed(1)} MB • {frames.length} Kare Analizi
+                    </p>
+                  </div>
+                </div>
+                
+                <Button
+                  onClick={handleAnalyze}
+                  disabled={isLoading || extracting}
+                  className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 px-6 btn-press"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                  )}
+                  {isLoading ? "Analiz Ediliyor..." : "Başlat"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
 
-            {score !== null ? (
-              <Card>
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <CardTitle className="text-base">Genel Puan</CardTitle>
-                    <Badge variant={scoreVariant as any}>
-                      {score}/100{scoreLabel ? ` • ${scoreLabel}` : ""}
+        {/* Results Section */}
+        <div className="px-6 py-6 border-t border-white/10">
+          {!result && !isLoading && (
+            <div className="py-20 flex flex-col items-center justify-center text-center opacity-40">
+              <BarChart3 className="h-16 w-16 text-muted-foreground mb-4 animate-float" />
+              <p className="text-lg font-medium">Analiz sonuçları burada görünecek</p>
+              <p className="text-sm">Video yükleyip "Başlat" butonuna tıklayın</p>
+            </div>
+          )}
+
+          {(result || isLoading) && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {/* Score & Caption Header */}
+              <div className="flex flex-col lg:flex-row gap-6">
+                {score !== null && (
+                  <div className="lg:w-1/3 p-6 rounded-3xl glass-card flex flex-col items-center justify-center text-center space-y-4">
+                    <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Muvaffaqiyyət Balı</span>
+                    <div className="relative flex items-center justify-center">
+                      <svg className="h-32 w-32 transform -rotate-90">
+                        <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/5" />
+                        <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={364.4} strokeDashoffset={364.4 - (364.4 * score) / 100} className="text-primary progress-glow transition-all duration-1000 ease-out" />
+                      </svg>
+                      <span className="absolute text-3xl font-bold">{score}</span>
+                    </div>
+                    <Badge variant={scoreVariant as any} className="px-4 py-1 rounded-full text-xs">
+                      {scoreLabel}
                     </Badge>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Progress value={score} />
-                  <div className="text-xs text-muted-foreground">
-                    İpucu: 75+ güçlü, 50-74 orta, 0-49 zayıf.
+                )}
+
+                <div className={`flex-1 p-6 rounded-3xl glass-card relative group ${!caption && "animate-pulse bg-white/5"}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-bold text-lg flex items-center gap-2">
+                      <Film className="h-5 w-5 text-primary" /> Video Xülasəsi
+                    </h3>
+                    <Button variant="ghost" size="sm" onClick={copyCaption} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Copy className="h-4 w-4" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ) : null}
+                  <div className="text-sm leading-relaxed text-foreground/80 italic">
+                    {caption || "AI videonu təhlil edir..."}
+                  </div>
+                  {captionCopied && <Badge className="absolute top-4 right-4 animate-bounce">Kopyalandı!</Badge>}
+                </div>
+              </div>
 
-            {isLoading && !result ? (
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">Analiz Ediliyor...</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">
-                  Kareler inceleniyor ve rapor hazırlanıyor.
-                </CardContent>
-              </Card>
-            ) : null}
+              {/* Bento Grid Results */}
+              {result && (
+                <div className="bento-grid">
+                   {(() => {
+                    const filtered = sections.filter((s) => s.key !== "score");
+                    const usable =
+                      filtered.length === 1 && filtered[0]?.key === "raw"
+                        ? [{ ...filtered[0], title: "Tam Rapor", key: "report" }]
+                        : filtered.filter((s) => s.key !== "raw");
 
-            {result ? (
-              <>
-                <Card className="border-border/70">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <CardTitle className="text-base">Açıklama (Caption)</CardTitle>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={copyCaption}
-                        disabled={!caption}
-                        className="gap-2"
+                    const order = ["pros", "cons", "dialog", "visual", "strategy", "result", "report"];
+                    const byKey = new Map(usable.map((s) => [s.key, s] as const));
+                    const list = order.map((k) => byKey.get(k)).filter(Boolean) as typeof usable;
+
+                    return list.map((s, idx) => (
+                      <div 
+                        key={s.key} 
+                        className={`p-6 rounded-3xl glass-card flex flex-col stagger-${(idx % 6) + 1} reveal-up revealed`}
                       >
-                        <Copy className="h-4 w-4" />
-                        {captionCopied ? "Kopyalandı" : "Açıklamayı Kopyala"}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="rounded-lg bg-secondary/20 p-4">
-                      {caption ? (
-                        niceTextBlock(caption)
-                      ) : (
-                        <div className="text-sm text-muted-foreground">
-                          Caption bulunamadı. (Model bazen bu bölümü atlayabiliyor.)
+                        <h4 className="font-bold text-primary mb-3 text-sm uppercase tracking-wide">{s.title}</h4>
+                        <div className="flex-1 overflow-y-auto max-h-[300px] custom-scrollbar">
+                           {niceTextBlock(s.content || "-")}
                         </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {(() => {
-                  const filtered = sections.filter((s) => s.key !== "score");
-                  const usable =
-                    filtered.length === 1 && filtered[0]?.key === "raw"
-                      ? [{ ...filtered[0], title: "Rapor", key: "report" }]
-                      : filtered.filter((s) => s.key !== "raw");
-
-                  const order = ["pros", "cons", "dialog", "visual", "strategy", "result", "report"];
-                  const byKey = new Map(usable.map((s) => [s.key, s] as const));
-                  const cards = order.map((k) => byKey.get(k)).filter(Boolean) as typeof usable;
-                  const list = cards.length ? cards : usable;
-                  const active = list.find((s) => s.key === activeKey) || list[0];
-
-                  if (!active) return null;
-
-                  return (
-                    <div className="space-y-3">
-                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                        {list.map((s) => (
-                          <button
-                            key={`card-${s.key}`}
-                            type="button"
-                            onClick={() => setActiveKey(s.key)}
-                            className={[
-                              "rounded-xl border p-3 text-left transition-colors",
-                              "hover:bg-secondary/20",
-                              active.key === s.key
-                                ? "border-primary/50 bg-secondary/20"
-                                : "border-border/70 bg-background/40",
-                            ].join(" ")}
-                          >
-                            <div className="text-sm font-semibold text-foreground">
-                              {s.title}
-                            </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
-                              {snippet(s.content || "-")}
-                            </div>
-                          </button>
-                        ))}
                       </div>
-
-                      <Card className="border-border/70">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base">{active.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="rounded-lg bg-secondary/20 p-4">
-                            {niceTextBlock(active.content || "-")}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  );
-                })()}
-              </>
-            ) : null}
-          </div>
-        )}
+                    ));
+                  })()}
+                </div>
+              )}
+              
+              {isLoading && !result && (
+                <div className="flex items-center justify-center py-12">
+                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                   <span className="ml-3 text-muted-foreground animate-pulse">Dərin analiz aparılır...</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="video/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+      
       {/* Hidden canvas for frame extraction */}
       <canvas ref={canvasRef} className="hidden" />
       <video ref={videoRef} className="hidden" />
