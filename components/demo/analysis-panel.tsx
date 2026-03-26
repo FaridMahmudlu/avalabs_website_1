@@ -280,7 +280,7 @@ export function AnalysisPanel() {
               Video Analiz Studio
             </h2>
             <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-widest">
-              AI Powered Insights
+              AI Destekli Analiz
             </p>
           </div>
         </div>
@@ -300,8 +300,8 @@ export function AnalysisPanel() {
               type="text"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              placeholder="Video konusu veya odak noktası..."
-              className="relative w-full rounded-xl border border-white/10 bg-black/20 backdrop-blur-sm px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+              placeholder="Video konusu veya ana fikri..."
+              className="relative w-full rounded-xl border border-white/10 bg-background/40 backdrop-blur-sm px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all font-medium"
             />
           </div>
 
@@ -309,26 +309,26 @@ export function AnalysisPanel() {
             <div
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
-              className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-white/10 py-16 transition-all hover:border-primary/40 hover:bg-primary/5"
+              className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-white/10 py-20 transition-all hover:border-primary/40 hover:bg-primary/5"
               onClick={() => fileInputRef.current?.click()}
               onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
               role="button"
               tabIndex={0}
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary/50 group-hover:scale-110 transition-transform duration-300">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/50 group-hover:scale-110 transition-transform duration-300">
                 <Upload className="h-8 w-8 text-primary/70" />
               </div>
               <div className="text-center">
-                <p className="text-base font-semibold text-foreground">
-                  Video yükle veya sürükle
+                <p className="text-lg font-semibold text-foreground">
+                  Videoyu buraya sürükleyin veya seçin
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground/60">
-                  MP4, MOV, AVI (Maks. 100MB)
+                  MP4, MOV, AVI (Max. 100MB)
                 </p>
               </div>
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-1">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 p-1">
               {/* Film Strip Effect */}
               {frames.length > 0 && (
                 <div className="film-strip flex gap-2 overflow-x-auto px-4 no-scrollbar">
@@ -345,17 +345,17 @@ export function AnalysisPanel() {
                 </div>
               )}
               
-              <div className="flex items-center justify-between p-4 bg-white/5 backdrop-blur-sm">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Film className="h-5 w-5 text-primary" />
+              <div className="flex items-center justify-between p-5 bg-white/5 backdrop-blur-md">
+                <div className="flex items-center gap-4">
+                  <div className="p-2.5 rounded-xl bg-primary/10">
+                    <Film className="h-6 w-6 text-primary" />
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">
                       {videoFile.name}
                     </p>
                     <p className="text-xs text-muted-foreground/70">
-                      {(videoFile.size / (1024 * 1024)).toFixed(1)} MB • {frames.length} Kare Analizi
+                      {(videoFile.size / (1024 * 1024)).toFixed(1)} MB • {frames.length} Kare Analiz Edilecek
                     </p>
                   </div>
                 </div>
@@ -363,12 +363,12 @@ export function AnalysisPanel() {
                 <Button
                   onClick={handleAnalyze}
                   disabled={isLoading || extracting}
-                  className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 px-6 btn-press"
+                  className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/30 px-8 py-6 text-base font-bold rounded-2xl btn-press"
                 >
                   {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   ) : (
-                    <BarChart3 className="h-4 w-4 mr-2" />
+                    <BarChart3 className="h-5 w-5 mr-2" />
                   )}
                   {isLoading ? "Analiz Ediliyor..." : "Başlat"}
                 </Button>
@@ -380,46 +380,46 @@ export function AnalysisPanel() {
         {/* Results Section */}
         <div className="px-6 py-6 border-t border-white/10">
           {!result && !isLoading && (
-            <div className="py-20 flex flex-col items-center justify-center text-center opacity-40">
-              <BarChart3 className="h-16 w-16 text-muted-foreground mb-4 animate-float" />
-              <p className="text-lg font-medium">Analiz sonuçları burada görünecek</p>
-              <p className="text-sm">Video yükleyip "Başlat" butonuna tıklayın</p>
+            <div className="py-24 flex flex-col items-center justify-center text-center opacity-40">
+              <BarChart3 className="h-20 w-20 text-muted-foreground mb-6 animate-float" />
+              <p className="text-xl font-semibold">Analiz sonuçları hazır olduğunda burada listelenecek</p>
+              <p className="text-sm mt-2">Süreci başlatmak için yukarıdaki "Başlat" butonuna basın</p>
             </div>
           )}
 
           {(result || isLoading) && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
               {/* Score & Caption Header */}
-              <div className="flex flex-col lg:flex-row gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {score !== null && (
-                  <div className="lg:w-1/3 p-6 rounded-3xl glass-card flex flex-col items-center justify-center text-center space-y-4">
-                    <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Muvaffaqiyyət Balı</span>
+                  <div className="lg:col-span-4 p-8 rounded-[40px] glass-card flex flex-col items-center justify-center text-center space-y-6">
+                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-wider">BAŞARI PUANI</span>
                     <div className="relative flex items-center justify-center">
-                      <svg className="h-32 w-32 transform -rotate-90">
-                        <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/5" />
-                        <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={364.4} strokeDashoffset={364.4 - (364.4 * score) / 100} className="text-primary progress-glow transition-all duration-1000 ease-out" />
+                      <svg className="h-40 w-40 transform -rotate-90">
+                        <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-white/5" />
+                        <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="10" fill="transparent" strokeDasharray={452.4} strokeDashoffset={452.4 - (452.4 * score) / 100} className="text-primary progress-glow transition-all duration-1000 ease-out" />
                       </svg>
-                      <span className="absolute text-3xl font-bold">{score}</span>
+                      <span className="absolute text-4xl font-black">{score}</span>
                     </div>
-                    <Badge variant={scoreVariant as any} className="px-4 py-1 rounded-full text-xs">
+                    <div className="px-6 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold">
                       {scoreLabel}
-                    </Badge>
+                    </div>
                   </div>
                 )}
 
-                <div className={`flex-1 p-6 rounded-3xl glass-card relative group ${!caption && "animate-pulse bg-white/5"}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-lg flex items-center gap-2">
-                      <Film className="h-5 w-5 text-primary" /> Video Xülasəsi
+                <div className={`lg:col-span-8 p-8 rounded-[40px] glass-card relative group ${!caption && "animate-pulse bg-white/5"}`}>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-bold text-xl flex items-center gap-3">
+                      <Film className="h-6 w-6 text-primary" /> Video Özeti
                     </h3>
-                    <Button variant="ghost" size="sm" onClick={copyCaption} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Copy className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" onClick={copyCaption} className="opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                      <Copy className="h-4 w-4 mr-2" /> Kopyala
                     </Button>
                   </div>
-                  <div className="text-sm leading-relaxed text-foreground/80 italic">
-                    {caption || "AI videonu təhlil edir..."}
+                  <div className="text-base leading-relaxed text-foreground/80 italic font-medium">
+                    {caption || "AI videoyu analiz ederek özetini hazırlıyor..."}
                   </div>
-                  {captionCopied && <Badge className="absolute top-4 right-4 animate-bounce">Kopyalandı!</Badge>}
+                  {captionCopied && <Badge className="absolute top-6 right-8 animate-bounce bg-green-500">Kopyalandı!</Badge>}
                 </div>
               </div>
 
@@ -430,7 +430,7 @@ export function AnalysisPanel() {
                     const filtered = sections.filter((s) => s.key !== "score");
                     const usable =
                       filtered.length === 1 && filtered[0]?.key === "raw"
-                        ? [{ ...filtered[0], title: "Tam Rapor", key: "report" }]
+                        ? [{ ...filtered[0], title: "Kapsamlı Rapor", key: "report" }]
                         : filtered.filter((s) => s.key !== "raw");
 
                     const order = ["pros", "cons", "dialog", "visual", "strategy", "result", "report"];
@@ -440,10 +440,10 @@ export function AnalysisPanel() {
                     return list.map((s, idx) => (
                       <div 
                         key={s.key} 
-                        className={`p-6 rounded-3xl glass-card flex flex-col stagger-${(idx % 6) + 1} reveal-up revealed`}
+                        className={`p-8 rounded-[32px] glass-card flex flex-col stagger-${(idx % 6) + 1} reveal-up revealed border-white/5`}
                       >
-                        <h4 className="font-bold text-primary mb-3 text-sm uppercase tracking-wide">{s.title}</h4>
-                        <div className="flex-1 overflow-y-auto max-h-[300px] custom-scrollbar">
+                        <h4 className="font-black text-primary mb-5 text-sm uppercase tracking-widest">{s.title === "Pros" ? "İyi Yönler" : s.title === "Cons" ? "Zayıf / Eksik Yönler" : s.title === "Video Xülasəsi" ? "Video Özeti" : s.title}</h4>
+                        <div className="flex-1 overflow-y-auto max-h-[350px] custom-scrollbar text-sm font-medium leading-loose text-foreground/90">
                            {niceTextBlock(s.content || "-")}
                         </div>
                       </div>
@@ -453,15 +453,30 @@ export function AnalysisPanel() {
               )}
               
               {isLoading && !result && (
-                <div className="flex items-center justify-center py-12">
-                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                   <span className="ml-3 text-muted-foreground animate-pulse">Dərin analiz aparılır...</span>
+                <div className="flex flex-col items-center justify-center py-16 space-y-4">
+                   <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                   <span className="text-lg font-medium text-muted-foreground animate-pulse">Derin analiz yapılıyor, lütfen bekleyin...</span>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="video/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+      
+      {/* Hidden canvas for frame extraction */}
+      <canvas ref={canvasRef} className="hidden" />
+      <video ref={videoRef} className="hidden" />
+    </div>
+  );
+}
 
       <input
         ref={fileInputRef}
