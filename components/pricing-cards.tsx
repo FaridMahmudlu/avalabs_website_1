@@ -1,57 +1,56 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { pricingPlans } from "@/lib/pricing-plans";
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-function PricingCard({ plan, index }: { plan: typeof pricingPlans[0]; index: number }) {
-  const { ref, className } = useScrollReveal<HTMLDivElement>({
-    delay: index * 150,
-    direction: "up",
-  });
+function PricingCard({ plan, index }: { plan: typeof pricingPlans[0], index: number }) {
+  const isHigh = plan.highlighted;
 
   return (
     <div
-      ref={ref}
-      className={`relative flex flex-col rounded-xl border p-6 card-hover lg:p-8 ${className} ${
-        plan.highlighted
-          ? "border-primary/40 bg-gradient-to-b from-primary/5 to-white shadow-lg shadow-primary/10"
-          : "border-border bg-card"
+      className={`relative flex flex-col rounded-2xl border p-7 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 ${
+        isHigh
+          ? "border-blue-500/30 bg-white dark:bg-slate-900 shadow-lg shadow-blue-500/5 ring-1 ring-blue-500/10"
+          : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm"
       }`}
     >
-      {plan.highlighted && (
+      {isHigh && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-md animate-pulse-glow">
-            En Popüler
-          </span>
+          <div className="flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-xl">
+            <Sparkles className="h-3 w-3" /> EN POPÜLER
+          </div>
         </div>
       )}
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">{plan.description}</p>
+      <div className="mb-8">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{plan.name}</h3>
+        <p className="mt-2 text-sm text-slate-500 font-medium leading-relaxed">{plan.description}</p>
       </div>
 
-      <div className="mb-6 flex items-baseline gap-1">
-        <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-        {plan.period && <span className="text-muted-foreground">{plan.period}</span>}
+      <div className="mb-8 flex items-baseline gap-1.5">
+        <span className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">{plan.price}</span>
+        {plan.period && <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">{plan.period}</span>}
       </div>
 
-      <ul className="mb-8 flex flex-1 flex-col gap-3">
-        {plan.features.map((feature, fi) => (
-          <li key={feature} className="flex items-start gap-3 group" style={{ transitionDelay: `${fi * 50}ms` }}>
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary transition-transform duration-300 group-hover:scale-125" />
-            <span className="text-sm text-muted-foreground">{feature}</span>
+      <ul className="mb-10 flex flex-1 flex-col gap-4">
+        {plan.features.map((feature) => (
+          <li key={feature} className="flex items-start gap-3 group">
+            <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${isHigh ? "bg-blue-50 dark:bg-blue-900/40" : "bg-slate-50 dark:bg-slate-800/50"}`}>
+              <Check className={`h-3 w-3 ${isHigh ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"}`} />
+            </div>
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-400 leading-tight">
+              {feature}
+            </span>
           </li>
         ))}
       </ul>
 
       <Button
-        className={`btn-press w-full transition-all duration-300 ${
-          plan.highlighted
-            ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg hover:shadow-primary/20"
-            : "border-border bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        className={`h-12 w-full rounded-xl font-bold transition-all duration-300 active:scale-[0.98] ${
+          isHigh
+            ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20"
+            : "border border-slate-200 dark:border-slate-800 bg-transparent text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-900"
         }`}
       >
         {plan.cta}
@@ -62,7 +61,7 @@ function PricingCard({ plan, index }: { plan: typeof pricingPlans[0]; index: num
 
 export function PricingCards() {
   return (
-    <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+    <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
       {pricingPlans.map((plan, i) => (
         <PricingCard key={plan.name} plan={plan} index={i} />
       ))}
