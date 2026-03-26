@@ -442,7 +442,7 @@ export function AnalysisPanel() {
                         key={s.key} 
                         className={`p-8 rounded-[32px] glass-card flex flex-col stagger-${(idx % 6) + 1} reveal-up revealed border-white/5`}
                       >
-                        <h4 className="font-black text-primary mb-5 text-sm uppercase tracking-widest">{s.title === "Pros" ? "İyi Yönler" : s.title === "Cons" ? "Zayıf / Eksik Yönler" : s.title === "Video Xülasəsi" ? "Video Özeti" : s.title}</h4>
+                        <h4 className="font-black text-primary mb-5 text-sm uppercase tracking-widest">{s.title}</h4>
                         <div className="flex-1 overflow-y-auto max-h-[350px] custom-scrollbar text-sm font-medium leading-loose text-foreground/90">
                            {niceTextBlock(s.content || "-")}
                         </div>
@@ -462,21 +462,6 @@ export function AnalysisPanel() {
           )}
         </div>
       </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="video/*"
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-      
-      {/* Hidden canvas for frame extraction */}
-      <canvas ref={canvasRef} className="hidden" />
-      <video ref={videoRef} className="hidden" />
-    </div>
-  );
-}
 
       <input
         ref={fileInputRef}
