@@ -270,19 +270,20 @@ export function AnalysisPanel() {
   };
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden bg-slate-50/50 dark:bg-slate-950/20">
-      {/* Background Animated Orbs */}
+    <div className="relative flex h-full flex-col overflow-hidden bg-slate-50/20 dark:bg-slate-950/40">
+      {/* Background Animated Orbs - Aggressive Vibrancy */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-400/10 blur-[100px] animate-blob"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[30vw] h-[30vw] rounded-full bg-purple-400/10 blur-[100px] animate-blob" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[-20%] left-[-15%] w-[60vw] h-[60vw] rounded-full bg-blue-500/15 blur-[120px] animate-blob" style={{ animationDuration: '25s' }}></div>
+        <div className="absolute bottom-[-20%] right-[-15%] w-[50vw] h-[50vw] rounded-full bg-purple-500/15 blur-[120px] animate-blob" style={{ animationDelay: '4s', animationDuration: '30s' }}></div>
+        <div className="absolute top-[30%] right-[10%] w-[35vw] h-[35vw] rounded-full bg-pink-400/10 blur-[100px] animate-blob" style={{ animationDelay: '8s', animationDuration: '35s' }}></div>
       </div>
 
-      <div className="relative z-10 flex h-full flex-col glass-panel rounded-3xl border-white/5 mx-2 my-2 shadow-2xl overflow-hidden">
+      <div className="relative z-10 flex h-full flex-col glass-panel rounded-[40px] border-white/5 mx-3 my-3 shadow-[0_32px_128px_-32px_rgba(0,0,0,0.2)] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-5 bg-white/10 dark:bg-white/5 backdrop-blur-md">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/20 glow-blue">
-              <BarChart3 className="h-6 w-6 text-primary" />
+        <div className="flex items-center justify-between border-b border-white/10 px-8 py-6 bg-white/30 dark:bg-white/5 backdrop-blur-3xl">
+          <div className="flex items-center gap-5">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-primary/20 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+              <BarChart3 className="h-7 w-7 text-primary" />
             </div>
             <div>
               <h2 className="text-lg font-bold tracking-tight text-foreground font-outfit">
@@ -318,31 +319,31 @@ export function AnalysisPanel() {
               <div
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-[40px] border-2 border-dashed border-slate-200 dark:border-white/10 py-24 transition-all hover:border-primary/40 hover:bg-primary/5 bg-white/40 dark:bg-black/15 backdrop-blur-md"
+                className="group relative flex cursor-pointer flex-col items-center justify-center gap-8 rounded-[48px] border-2 border-dashed border-slate-300 dark:border-white/10 py-32 transition-all hover:border-primary/40 hover:bg-primary/5 bg-white/50 dark:bg-black/20 backdrop-blur-2xl"
                 onClick={() => fileInputRef.current?.click()}
                 onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
                 role="button"
                 tabIndex={0}
               >
-                <div className="flex h-24 w-24 items-center justify-center rounded-[32px] bg-primary/10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
-                  <Upload className="h-10 w-10 text-primary" />
+                <div className="flex h-28 w-28 items-center justify-center rounded-[36px] bg-primary/10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-xl group-hover:shadow-primary/30">
+                  <Upload className="h-12 w-12 text-primary" />
                 </div>
-                <div className="text-center space-y-2">
-                  <p className="text-xl font-bold tracking-tight text-foreground font-outfit">
+                <div className="text-center space-y-3">
+                  <p className="text-2xl font-black tracking-tight text-foreground font-outfit uppercase">
                     Videoyu buraya sürükleyin veya seçin
                   </p>
-                  <p className="text-sm font-medium text-muted-foreground/60 font-outfit">
+                  <p className="text-xs font-bold text-muted-foreground/60 font-outfit tracking-[0.3em] uppercase">
                     MP4, MOV, AVI (Maks. 100MB)
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-[32px] border border-slate-200/50 dark:border-white/10 glass-card p-0 shadow-2xl">
+              <div className="relative overflow-hidden rounded-[48px] border border-slate-200/50 dark:border-white/10 glass-card p-0 shadow-2xl transition-all duration-500 hover:shadow-primary/10">
                 {/* Film Strip Effect */}
                 {frames.length > 0 && (
-                  <div className="film-strip flex gap-2 overflow-x-auto px-4 no-scrollbar">
+                  <div className="film-strip flex gap-3 overflow-x-auto px-6 no-scrollbar">
                     {frames.map((frame, i) => (
-                      <div key={`frame-${i}`} className="film-frame h-28 w-48 shrink-0">
+                      <div key={`frame-${i}`} className="film-frame h-32 w-56 shrink-0 rounded-xl overflow-hidden shadow-2xl">
                         <img
                           src={frame}
                           alt={`Kare ${i + 1}`}
@@ -354,16 +355,16 @@ export function AnalysisPanel() {
                   </div>
                 )}
                 
-                <div className="flex flex-wrap items-center justify-between gap-6 p-6 bg-white/60 dark:bg-white/5 backdrop-blur-2xl">
-                  <div className="flex items-center gap-5">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-primary/15 shadow-sm">
-                      <Film className="h-7 w-7 text-primary" />
+                <div className="flex flex-wrap items-center justify-between gap-8 p-8 bg-white/40 dark:bg-white/5 backdrop-blur-3xl">
+                  <div className="flex items-center gap-6">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl bg-primary/20 shadow-lg">
+                      <Film className="h-8 w-8 text-primary" />
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-base font-bold text-foreground font-outfit tracking-tight">
+                      <p className="truncate text-xl font-black text-foreground font-outfit tracking-tighter uppercase">
                         {videoFile.name}
                       </p>
-                      <p className="text-xs font-semibold text-muted-foreground/70 font-outfit uppercase tracking-wider">
+                      <p className="text-[10px] font-black text-muted-foreground/70 font-outfit uppercase tracking-[0.25em] mt-1.5 opacity-80">
                         {(videoFile.size / (1024 * 1024)).toFixed(1)} MB • {frames.length} Kare Analiz Edilecek
                       </p>
                     </div>
@@ -372,7 +373,7 @@ export function AnalysisPanel() {
                   <Button
                     onClick={handleAnalyze}
                     disabled={isLoading || extracting}
-                    className="relative group overflow-hidden rounded-[20px] bg-primary px-10 py-7 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all hover:scale-[1.03] active:scale-95 btn-press"
+                    className="relative group overflow-hidden rounded-[24px] bg-gradient-to-r from-primary via-blue-600 to-indigo-600 px-14 py-8 h-auto shadow-2xl shadow-primary/40 hover:shadow-primary/60 transition-all hover:scale-[1.05] active:scale-95 btn-press"
                   >
                     <div className="relative z-10 flex items-center gap-3 font-black text-lg text-white font-outfit">
                       {isLoading ? (
@@ -409,25 +410,29 @@ export function AnalysisPanel() {
                 {/* Score & Caption Header */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {score !== null && (
-                    <div className="lg:col-span-4 p-10 rounded-[48px] glass-card flex flex-col items-center justify-center text-center space-y-8 shadow-2xl">
-                      <span className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.3em]">ANALİZ PUANI</span>
-                      <div className="relative flex items-center justify-center scale-110">
+                    <div className="lg:col-span-4 p-12 rounded-[56px] glass-card flex flex-col items-center justify-center text-center space-y-10 shadow-2xl relative overflow-hidden group/score">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 opacity-0 group-hover/score:opacity-100 transition-opacity duration-700"></div>
+                      <span className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em] opacity-60">ANALİZ PUANI</span>
+                      <div className="relative flex items-center justify-center scale-125">
                         <svg className="h-44 w-44 transform -rotate-90">
-                          <circle cx="88" cy="88" r="80" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-100 dark:text-white/5" />
-                          <circle cx="88" cy="88" r="80" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray={502.6} strokeDashoffset={502.6 - (502.6 * score) / 100} strokeLinecap="round" className="text-primary progress-glow transition-all duration-1500 ease-out" />
+                          <circle cx="88" cy="88" r="80" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-200 dark:text-white/5" />
+                          <circle cx="88" cy="88" r="80" stroke="currentColor" strokeWidth="10" fill="transparent" strokeDasharray={502.6} strokeDashoffset={502.6 - (502.6 * score) / 100} strokeLinecap="round" className="text-primary progress-glow transition-all duration-2000 ease-out" />
                         </svg>
-                        <span className="absolute text-5xl font-black tracking-tighter font-outfit">{score}</span>
+                        <span className="absolute text-6xl font-black tracking-tighter font-outfit">{score}</span>
                       </div>
-                      <Badge variant={scoreVariant as any} className="rounded-full px-8 py-2 font-black shadow-xl text-base tracking-tight uppercase">
+                      <Badge variant={scoreVariant as any} className="rounded-2xl px-10 py-3 font-black shadow-2xl text-lg tracking-widest uppercase border-0">
                         {scoreLabel}
                       </Badge>
                     </div>
                   )}
 
-                  <div className={`lg:col-span-${score !== null ? '8' : '12'} p-10 rounded-[48px] glass-card relative group shadow-2xl ${!caption && "animate-pulse"}`}>
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="font-black text-2xl flex items-center gap-4 font-outfit tracking-tight uppercase">
-                        <Film className="h-7 w-7 text-primary" /> Video Özeti
+                  <div className={`lg:col-span-${score !== null ? '8' : '12'} p-12 rounded-[56px] glass-card relative group shadow-2xl ${!caption && "animate-pulse"}`}>
+                    <div className="flex items-center justify-between mb-10">
+                      <h3 className="font-black text-3xl flex items-center gap-5 font-outfit tracking-tighter uppercase">
+                        <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                          <Film className="h-6 w-6 text-primary" />
+                        </div>
+                        Video Özeti
                       </h3>
                       <Button variant="ghost" size="sm" onClick={copyCaption} className="opacity-0 group-hover:opacity-100 transition-all rounded-full bg-white/10 hover:bg-white/20 px-4">
                         <Copy className="h-4 w-4 mr-2" /> Kopyala
@@ -457,13 +462,14 @@ export function AnalysisPanel() {
                       return list.map((s, idx) => (
                         <div 
                           key={s.key} 
-                          className={`p-10 rounded-[40px] glass-card flex flex-col transition-all duration-500 border-white/10 hover:scale-[1.02] shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] group/card`}
+                          className={`p-12 rounded-[48px] glass-card flex flex-col transition-all duration-700 border-white/10 hover:scale-[1.03] shadow-xl hover:shadow-primary/20 group/card relative overflow-hidden`}
                         >
-                          <h4 className="font-black text-primary mb-8 text-[11px] uppercase tracking-[0.25em] flex items-center gap-3">
-                            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] -translate-y-16 translate-x-16 group-hover/card:bg-primary/10 transition-colors"></div>
+                          <h4 className="font-black text-primary mb-10 text-xs uppercase tracking-[0.35em] flex items-center gap-4">
+                            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.8)]"></span>
                             {s.title}
                           </h4>
-                          <div className="flex-1 overflow-y-auto max-h-[500px] custom-scrollbar text-lg font-medium leading-relaxed text-foreground/95 font-outfit">
+                          <div className="flex-1 overflow-y-auto max-h-[500px] custom-scrollbar text-[1.1rem] font-bold leading-relaxed text-foreground/90 font-outfit">
                              {niceTextBlock(s.content || "-")}
                           </div>
                         </div>
