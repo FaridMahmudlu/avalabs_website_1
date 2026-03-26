@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VideoStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum StorageProvider {
+  LOCAL
+  S3
+  GCS
+  AZURE
+}
+
+enum JobType {
+  INGEST
+  TRANSCODE
+  THUMBNAILS
+  TRANSCRIBE
+  SUMMARIZE
+  ANALYZE
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id                   String   @id @default(uuid()) @map("user_id")
+  username             String
+  email                String   @unique
+  passwordHash         String   @map("password_hash")
+  googleAuthSecret     String?  @map("google_auth_secret")
+  socialMediaUsername  String?  @map("social_media_username")
+  fieldOfInterest      String?  @map("field_of_interest")
+  profession           String?  @map("profession")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  videos Video[]
+
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Video {
+  id               String          @id @default(uuid()) @map("video_id")
+  ownerId          String          @map("owner_id")
+  owner            User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  storageProvider  StorageProvider @default(LOCAL) @map("storage_provider")
+  filePath         String          @map("file_path")
+  status           VideoStatus     @default(PENDING)
+  durationSeconds  Int?            @map("duration_seconds")
+  originalFilename String          @map("original_filename")
+  mimeType         String?         @map("mime_type")
+  sizeBytes        BigInt?         @map("size_bytes")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+
+  analyses VideoAnalysis[]
+  jobs     Job[]
+
+  @@index([ownerId, createdAt])
+  @@index([status])
+  @@map("videos")
+}
+
+model VideoAnalysis {
+  id             String   @id @default(uuid()) @map("analysis_id")
+  videoId        String   @map("video_id")
+  video          Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  engine         String   @default("whisper")
+  transcriptText String   @map("transcript_text")
+  language       String
+  summary        String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([videoId, createdAt])
+  @@map("video_analysis")
+}
+
+model Job {
+  id          String    @id @default(uuid()) @map("job_id")
+  videoId     String    @map("video_id")
+  video       Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  type        JobType   @default(ANALYZE)
+  status      JobStatus @default(QUEUED)
+  priority    Int       @default(0)
+  runAt       DateTime  @default(now()) @map("run_at")
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3) @map("max_attempts")
+  lockedAt    DateTime? @map("locked_at")
+  lockedBy    String?   @map("locked_by")
+  startedAt   DateTime? @map("started_at")
+  finishedAt  DateTime? @map("finished_at")
+  errorLog    String?   @map("error_log")
+  dedupeKey   String?   @unique @map("dedupe_key")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([status, priority, runAt])
+  @@index([videoId, createdAt])
+  @@index([type, status])
+  @@map("job_queue")
+}

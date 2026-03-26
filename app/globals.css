@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 210 33% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 20%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 197 37% 50%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.75rem;
+    --sidebar-background: 210 33% 98%;
+    --sidebar-foreground: 222 47% 20%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 20%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ── Scroll Reveal Animations ── */
+
+.reveal-up,
+.reveal-down,
+.reveal-left,
+.reveal-right,
+.reveal-fade {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-up    { transform: translateY(40px); }
+.reveal-down  { transform: translateY(-40px); }
+.reveal-left  { transform: translateX(-50px); }
+.reveal-right { transform: translateX(50px); }
+.reveal-fade  { transform: none; }
+
+.reveal-up.revealed,
+.reveal-down.revealed,
+.reveal-left.revealed,
+.reveal-right.revealed,
+.reveal-fade.revealed {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* ── Float / Pulse ── */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ── Blue glow ── */
+
+.glow-blue {
+  box-shadow: 0 4px 24px hsl(217 91% 60% / 0.10), 0 1px 4px hsl(217 91% 60% / 0.06);
+}
+
+.glow-blue-strong {
+  box-shadow: 0 8px 32px hsl(217 91% 60% / 0.15), 0 2px 8px hsl(217 91% 60% / 0.08);
+}
+
+/* ── Card / Button micro-interactions ── */
+
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px hsl(217 91% 60% / 0.08), 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* ── Code block ── */
+
+.code-gradient {
+  background: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
+}
+
+/* ── Stagger delay utilities ── */
+
+.stagger-1 { transition-delay: 0ms; }
+.stagger-2 { transition-delay: 100ms; }
+.stagger-3 { transition-delay: 200ms; }
+.stagger-4 { transition-delay: 300ms; }
+.stagger-5 { transition-delay: 400ms; }
+.stagger-6 { transition-delay: 500ms; }
+
+/* ── Moving Mesh Gradient Blobs ── */
+
+@keyframes blob {
+  0% { transform: translate(0vw, 0vh) scale(1); }
+  25% { transform: translate(5vw, -5vh) scale(1.1); }
+  50% { transform: translate(0vw, 10vh) scale(0.9); }
+  75% { transform: translate(-5vw, 5vh) scale(1.05); }
+  100% { transform: translate(0vw, 0vh) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 20s infinite ease-in-out alternate;
+  will-change: transform;
+}
