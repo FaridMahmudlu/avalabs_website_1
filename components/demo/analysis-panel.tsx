@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef, useCallback, useEffect } from "react";
+import * as React from "react";
 import { Copy, Upload, Loader2, BarChart3, X, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { extractAnalyzeCaption, extractScore, parseAnalyzeOutput } from "@/lib/ai-output";
 
-// Turkish Localized Studio v1.1
+// Turkish Localized Studio v1.2 - SSR Fix
 
 function snippet(text: string, maxChars = 220) {
   const t = (text || "").trim().replace(/\s+/g, " ");
@@ -39,32 +39,32 @@ function niceTextBlock(text: string) {
 }
 
 export function AnalysisPanel() {
-  const [topic, setTopic] = useState("");
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [frames, setFrames] = useState<string[]>([]);
-  const [frameBlobs, setFrameBlobs] = useState<Blob[]>([]);
-  const [result, setResult] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [extracting, setExtracting] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [topic, setTopic] = React.useState("");
+  const [videoFile, setVideoFile] = React.useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = React.useState<string | null>(null);
+  const [frames, setFrames] = React.useState<string[]>([]);
+  const [frameBlobs, setFrameBlobs] = React.useState<Blob[]>([]);
+  const [result, setResult] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [extracting, setExtracting] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const SANIYE_ARALIGI = 2;
   const MAX_FRAMES = 20;
 
-  const sections = useMemo(() => parseAnalyzeOutput(result), [result]);
-  const caption = useMemo(() => extractAnalyzeCaption(result), [result]);
-  const score = useMemo(() => extractScore(result), [result]);
+  const sections = React.useMemo(() => parseAnalyzeOutput(result), [result]);
+  const caption = React.useMemo(() => extractAnalyzeCaption(result), [result]);
+  const score = React.useMemo(() => extractScore(result), [result]);
   const scoreLabel =
     score === null ? null : score >= 75 ? "Güçlü" : score >= 50 ? "Orta" : "Zayıf";
   const scoreVariant =
     score === null ? "secondary" : score >= 75 ? "default" : score >= 50 ? "secondary" : "destructive";
 
-  const [activeKey, setActiveKey] = useState<string>("pros");
-  useEffect(() => {
+  const [activeKey, setActiveKey] = React.useState<string>("pros");
+  React.useEffect(() => {
     if (!result) return;
     const keys = sections.map((s) => s.key);
     const usable = keys.filter((k) => k !== "score");
@@ -82,7 +82,7 @@ export function AnalysisPanel() {
     }
   };
 
-  const [captionCopied, setCaptionCopied] = useState(false);
+  const [captionCopied, setCaptionCopied] = React.useState(false);
   const copyCaption = async () => {
     if (!caption) return;
     try {
@@ -94,7 +94,7 @@ export function AnalysisPanel() {
     }
   };
 
-  const extractFrames = useCallback(
+  const extractFrames = React.useCallback(
     (file: File) => {
       setExtracting(true);
       const url = URL.createObjectURL(file);
