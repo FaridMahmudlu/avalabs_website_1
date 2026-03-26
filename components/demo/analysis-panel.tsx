@@ -1,12 +1,6 @@
-"use client";
-
-import { useMemo, useState, useRef, useCallback, useEffect } from "react";
-import { Copy, Upload, Loader2, BarChart3, X, Film } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { extractAnalyzeCaption, extractScore, parseAnalyzeOutput } from "@/lib/ai-output";
+
+// Turkish Localized Studio v1.1
 
 function snippet(text: string, maxChars = 220) {
   const t = (text || "").trim().replace(/\s+/g, " ");
