@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -209,13 +207,13 @@
   animation: blob 20s infinite ease-in-out alternate;
   will-change: transform;
 }
-/* ── Premium Glassmorphism ── */
+/* ── Professional Minimalist Glassmorphism ── */
 .glass-panel {
-  @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200/50 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)];
+  @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm;
 }
 
 .glass-card {
-  @apply bg-white/20 dark:bg-white/5 backdrop-blur-2xl border border-white/30 dark:border-white/10 hover:border-primary/40 transition-all duration-700 shadow-sm hover:shadow-2xl;
+  @apply bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-md;
 }
 
 /* ── Bento Grid Utilities ── */
