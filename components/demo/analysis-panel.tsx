@@ -6,19 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { extractAnalyzeCaption, extractScore, parseAnalyzeOutput } from "@/lib/ai-output";
 
-// Compact Professional Studio v1.5
-// Simplified typography, reduced sizing, fixed text wrapping.
+// Turkish Localized Studio v1.5 - Logic Restore & Compact UI
+// Core logic restored from Step 859 to ensure "Arka plan sistemi" remains untouched.
 
 function niceTextBlock(text: string) {
   const t = (text || "").trim();
   const lines = t.split("\n").map((l) => l.trim()).filter(Boolean);
   const isList = lines.length > 1 && lines.every((l) => /^(\-|\d+\.)\s+/.test(l));
-  
   if (isList) {
     return (
-      <ul className="list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+      <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-foreground/90">
         {lines.map((l, i) => (
-          <li key={`${i}-${l.slice(0, 10)}`}>
+          <li key={`${i}-${l.slice(0, 12)}`}>
             {l.replace(/^(\-|\d+\.)\s+/, "")}
           </li>
         ))}
@@ -26,7 +25,7 @@ function niceTextBlock(text: string) {
     );
   }
   return (
-    <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+    <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
       {t || "-"}
     </div>
   );
@@ -41,7 +40,6 @@ export function AnalysisPanel() {
   const [result, setResult] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [extracting, setExtracting] = React.useState(false);
-  
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -52,8 +50,10 @@ export function AnalysisPanel() {
   const sections = React.useMemo(() => parseAnalyzeOutput(result), [result]);
   const caption = React.useMemo(() => extractAnalyzeCaption(result), [result]);
   const score = React.useMemo(() => extractScore(result), [result]);
-  const scoreLabel = score === null ? null : score >= 75 ? "Güçlü" : score >= 50 ? "Orta" : "Zayıf";
-  const scoreVariant = score === null ? "secondary" : score >= 75 ? "default" : score >= 50 ? "secondary" : "destructive";
+  const scoreLabel =
+    score === null ? null : score >= 75 ? "Güçlü" : score >= 50 ? "Orta" : "Zayıf";
+  const scoreVariant =
+    score === null ? "secondary" : score >= 75 ? "default" : score >= 50 ? "secondary" : "destructive";
 
   const [captionCopied, setCaptionCopied] = React.useState(false);
   const copyCaption = async () => {
@@ -62,60 +62,80 @@ export function AnalysisPanel() {
       await navigator.clipboard.writeText(caption);
       setCaptionCopied(true);
       setTimeout(() => setCaptionCopied(false), 1200);
-    } catch { /* ignore */ }
+    } catch {
+      // ignore
+    }
   };
 
-  const extractFrames = React.useCallback((file: File) => {
-    setExtracting(true);
-    const url = URL.createObjectURL(file);
-    setVideoUrl(url);
+  const extractFrames = React.useCallback(
+    (file: File) => {
+      setExtracting(true);
+      const url = URL.createObjectURL(file);
+      setVideoUrl(url);
 
-    const video = document.createElement("video");
-    video.src = url;
-    video.muted = true;
-    video.preload = "auto";
+      const video = document.createElement("video");
+      video.crossOrigin = "anonymous";
+      video.src = url;
+      video.muted = true;
+      video.preload = "auto";
 
-    video.onloadedmetadata = () => {
-      const duration = video.duration;
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      video.onloadedmetadata = () => {
+        const duration = video.duration;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
 
-      const times: number[] = [];
-      for (let t = 0; t < duration; t += SANIYE_ARALIGI) {
-        times.push(t);
-        if (times.length >= MAX_FRAMES) break;
-      }
-
-      const capturedFrames: string[] = [];
-      const capturedBlobs: Blob[] = [];
-      let idx = 0;
-
-      const captureNext = () => {
-        if (idx >= times.length) {
-          setFrames(capturedFrames);
-          setFrameBlobs(capturedBlobs);
-          setExtracting(false);
-          return;
+        const times: number[] = [];
+        for (let t = 0; t < duration; t += SANIYE_ARALIGI) {
+          times.push(t);
+          if (times.length >= MAX_FRAMES) break;
         }
-        video.currentTime = times[idx];
+
+        const capturedFrames: string[] = [];
+        const capturedBlobs: Blob[] = [];
+        let idx = 0;
+
+        const captureNext = () => {
+          if (idx >= times.length) {
+            setFrames(capturedFrames);
+            setFrameBlobs(capturedBlobs);
+            setExtracting(false);
+            return;
+          }
+          video.currentTime = times[idx];
+        };
+
+        video.onseeked = () => {
+          canvas.width = Math.min(video.videoWidth, 640);
+          canvas.height = Math.min(
+            video.videoHeight,
+            (640 * video.videoHeight) / video.videoWidth,
+          );
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          capturedFrames.push(dataUrl);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) capturedBlobs.push(blob);
+              idx++;
+              captureNext();
+            },
+            "image/jpeg",
+            0.7,
+          );
+        };
+
+        captureNext();
       };
 
-      video.onseeked = () => {
-        canvas.width = Math.min(video.videoWidth, 640);
-        canvas.height = Math.min(video.videoHeight, (640 * video.videoHeight) / video.videoWidth);
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        capturedFrames.push(canvas.toDataURL("image/jpeg", 0.7));
-        canvas.toBlob((blob) => {
-          if (blob) capturedBlobs.push(blob);
-          idx++;
-          captureNext();
-        }, "image/jpeg", 0.7);
+      video.onerror = () => {
+        setExtracting(false);
       };
-      captureNext();
-    };
-    video.onerror = () => setExtracting(false);
-  }, []);
+    },
+    [],
+  );
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -156,10 +176,22 @@ export function AnalysisPanel() {
       const formData = new FormData();
       formData.append("topic", topic || "");
       formData.append("intervalSec", String(SANIYE_ARALIGI));
-      frameBlobs.forEach((blob, i) => formData.append("frames", blob, `frame-${i}.jpg`));
+      
+      frameBlobs.forEach((blob, i) => {
+        formData.append("frames", blob, `frame-${i}.jpg`);
+      });
 
-      const response = await fetch("/api/analyze", { method: "POST", body: formData });
-      if (!response.ok || !response.body) throw new Error("Analiz başlatılamadı");
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Bilinmeyen hata" }));
+        throw new Error(errorData.error || "Analiz basarisiz");
+      }
+      
+      if (!response.body) throw new Error("Yanit alinamadi");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -169,6 +201,7 @@ export function AnalysisPanel() {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
         buffer = lines.pop() || "";
@@ -178,21 +211,29 @@ export function AnalysisPanel() {
           if (trimmed.startsWith("data:")) {
             const data = trimmed.slice(5).trim();
             if (data === "[DONE]") continue;
+            let parsed: any;
             try {
-              const parsed = JSON.parse(data);
-              if (parsed.type === "text-delta" && parsed.delta) {
-                fullContent += parsed.delta;
-                setResult(fullContent);
-              } else if (parsed.type === "text" && parsed.text) {
-                fullContent = parsed.text;
-                setResult(fullContent);
-              }
-            } catch { continue; }
+              parsed = JSON.parse(data);
+            } catch {
+              continue;
+            }
+
+            if (parsed.type === "text-delta" && parsed.delta) {
+              fullContent += parsed.delta;
+              setResult(fullContent);
+            } else if (parsed.type === "text" && parsed.text) {
+              fullContent = parsed.text;
+              setResult(fullContent);
+            } else if (parsed.type === "error" && parsed.errorText) {
+              throw new Error(parsed.errorText);
+            }
           }
         }
       }
     } catch (err) {
-      setResult(`Hata: ${err instanceof Error ? err.message : "Bilinmeyen hata"}`);
+      setResult(
+        `Hata: ${err instanceof Error ? err.message : "Bilinmeyen hata"}`,
+      );
     } finally {
       setIsLoading(false);
     }
