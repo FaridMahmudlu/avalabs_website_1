@@ -9,7 +9,7 @@ function PricingCard({ plan, index }: { plan: typeof pricingPlans[0], index: num
 
   return (
     <div
-      className={`relative flex flex-col rounded-[2.5rem] border p-8 transition-all duration-700 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] hover:-translate-y-3 group overflow-hidden ${
+      className={`relative flex flex-col rounded-[2.5rem] border p-8 transition-all duration-700 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] hover:-translate-y-3 group ${
         isHigh
           ? "border-blue-500/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl shadow-xl shadow-blue-500/10 ring-1 ring-blue-400/20"
           : "border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm hover:border-slate-300 dark:hover:border-slate-700"

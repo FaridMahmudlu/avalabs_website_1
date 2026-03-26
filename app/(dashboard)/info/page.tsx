@@ -43,7 +43,7 @@ export default function InfoPage() {
         <div className="space-y-6 max-w-4xl">
           <h1 className="text-5xl font-black tracking-tight text-slate-900 dark:text-white md:text-6xl lg:text-7xl leading-[1.05] animate-in zoom-in-95 duration-700 delay-200 fill-mode-both">
             Instagram Müşterilerinizi <br />
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Yapay Zeka</span> ile Yönetin
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent animate-text-gradient">Yapay Zeka</span> ile Yönetin
           </h1>
           <p className="mx-auto max-w-2xl text-xl text-slate-500 font-medium leading-relaxed animate-in fade-in slide-in-from-top-4 duration-1000 delay-500 fill-mode-both">
             Meta bağlantıları ile hesabınızı profesyonelleştirin. Avalabs AI ile etkileşimi artırın, zaman kazanın ve satışlarınızı optimize edin.
